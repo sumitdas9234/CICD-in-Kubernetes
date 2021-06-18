@@ -701,3 +701,6 @@ MigrationBackup/
 .idea/
 
 dist
+key.json
+kubectl
+kustomize
