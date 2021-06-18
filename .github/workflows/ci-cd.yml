@@ -58,11 +58,18 @@ jobs:
         working-directory: ./google/k8s/
 
       # Deploy the Docker image to the GKE cluster
-      - name: Deploy App to Kubernetes
+      - name: Fetch KubeContext from GCP
         run: |-
           gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }} --project ${{ env.PROJECT_ID }}
+
+      - name: Kustomize the Image Name
+        run: |-
           ./kustomize edit set image usher:latest=gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ env.TAG}}
           ./kustomize build . | kubectl apply -f -
+        working-directory: ./google/k8s/
+
+      - name: Deploy App to Kubernetes
+        run: |-
           kubectl rollout status deployment/usher-app
           kubectl get deployments -o wide
-        working-directory: ./google/k8s/
+        
