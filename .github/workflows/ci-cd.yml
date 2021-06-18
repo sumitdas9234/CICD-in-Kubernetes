@@ -55,6 +55,7 @@ jobs:
         run: |-
           curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
+        working-directory: ./google/k8s/
 
       # Deploy the Docker image to the GKE cluster
       - name: Deploy App to Kubernetes
@@ -64,3 +65,4 @@ jobs:
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/usher-app
           kubectl get deployments -o wide
+        working-directory: ./google/k8s/
