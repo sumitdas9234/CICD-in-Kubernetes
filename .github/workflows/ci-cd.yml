@@ -71,5 +71,5 @@ jobs:
       - name: Deploy App to Kubernetes
         run: |-
           kubectl rollout status deployment/usher-app
-          kubectl get deployments -o wide
+          kubectl get deployment -o wide
         
