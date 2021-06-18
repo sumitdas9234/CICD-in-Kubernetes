@@ -6,7 +6,7 @@ metadata:
     run: usher
 spec:
   selector:
-    name: nginx-ingress-microk8s
+    name: nginx-ingress
   type: LoadBalancer
   ports:
     - name: http
