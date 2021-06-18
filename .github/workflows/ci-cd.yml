@@ -58,9 +58,11 @@ jobs:
         working-directory: ./google/k8s/
 
       # Deploy the Docker image to the GKE cluster
-      - name: Fetch KubeContext from GCP
-        run: |-
-          gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }} --project ${{ env.PROJECT_ID }}
+      - uses: google-github-actions/get-gke-credentials@v0.2.1
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+          credentials: ${{ secrets.GCLOUD_SERVICE_KEY }}
 
       - name: Kustomize the Image Name
         run: |-
