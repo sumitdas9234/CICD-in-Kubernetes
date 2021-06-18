@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: usher
+  name: usher-app
 spec:
   selector:
     matchLabels:
@@ -23,4 +23,4 @@ spec:
             cpu: "250m"
           limits:
             memory: "150Mi"
-            cpu: "300m"
+            cpu: "250m"
