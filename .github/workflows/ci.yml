@@ -5,7 +5,7 @@ on:
 jobs:
   default:
     env:
-      tag: ${GITHUB_REF##*/}-$GITHUB_RUN_NUMBER
+      tag: ${GITHUB_REF##*/}-1.0.$GITHUB_RUN_NUMBER
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
