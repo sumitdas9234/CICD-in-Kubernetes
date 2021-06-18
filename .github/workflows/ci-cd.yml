@@ -38,13 +38,13 @@ jobs:
       - name: Build Container Image
         shell: bash
         run: |
-          docker build . -t gcr.io/$PROJECT_ID/$IMAGE:$TAG
+          docker build . -t gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ env.TAG}}
         working-directory: ./google/app/
 
       - name: Push Container Image to Google Cloud Registry
         shell: bash
         run: |
-          docker push gcr.io/$PROJECT_ID/$IMAGE:$TAG
+          docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ env.TAG}}
         working-directory: ./google/app/
       
         # Set up kustomize
@@ -57,7 +57,7 @@ jobs:
       - name: Deploy App to Kubernetes
         run: |-
           gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
-          ./kustomize edit set image usher:latest=gcr.io/$PROJECT_ID/$IMAGE:$TAG
+          ./kustomize edit set image usher:latest=gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ env.TAG}}
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/usher-app
           kubectl get deployments -o wide
