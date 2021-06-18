@@ -1,2 +1,5 @@
+commonLabels:
+  app: usher-app
 resources:
 - deployment.yaml
+- service.yaml
