@@ -9,7 +9,7 @@ spec:
     name: nginx-ingress
   type: LoadBalancer
   ports:
-    - name: http
+    -   
       protocol: TCP
-      port: 8000
+      port: 80
       targetPort: 8000
