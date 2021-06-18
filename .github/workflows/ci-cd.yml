@@ -1,6 +1,9 @@
 name: Build, Pack, Push to GCR and Deploy to GKE
 on:
-  workflow_dispatch:
+  # workflow_dispatch:
+  push:
+    branches:
+      - k8s
 env:
   PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
   GKE_CLUSTER: k8s
