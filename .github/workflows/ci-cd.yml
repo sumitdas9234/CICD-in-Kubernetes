@@ -1,0 +1,63 @@
+name: Build, Pack, Push to GCR and Deploy to GKE
+on:
+  workflow_dispatch:
+env:
+  PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
+  GKE_CLUSTER: k8s
+  GKE_ZONE: us-east4-b
+  DEPLOYMENT_NAME: usher-app
+  IMAGE: usher
+  TAG: ${GITHUB_REF##*/}-1.0.$GITHUB_RUN_NUMBER
+
+jobs:
+  default:     
+      
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build Application Bundle
+        shell: bash
+        run: |
+          npm install
+          npm run build --if-present
+        working-directory: ./google/app    
+      
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
+          project_id: $PROJECT_ID
+
+      - name: Login to GCR
+        shell: bash
+        run: |-
+          gcloud --quiet auth configure-docker
+
+      - name: Build Container Image
+        shell: bash
+        run: |
+          docker build . -t gcr.io/$PROJECT_ID/$IMAGE:$TAG
+        working-directory: ./google/app/
+
+      - name: Push Container Image to Google Cloud Registry
+        shell: bash
+        run: |
+          docker push gcr.io/$PROJECT_ID/$IMAGE:$TAG
+        working-directory: ./google/app/
+      
+        # Set up kustomize
+      - name: Set up Kustomize
+        run: |-
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy App to Kubernetes
+        run: |-
+          gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+          ./kustomize edit set image usher:latest=gcr.io/$PROJECT_ID/$IMAGE:$TAG
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment/usher-app
+          kubectl get deployments -o wide
