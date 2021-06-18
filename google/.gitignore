@@ -702,5 +702,6 @@ MigrationBackup/
 
 dist
 key.json
+mystic-rigging-316907-670cca4e7445.json
 kubectl
 kustomize
