@@ -5,12 +5,14 @@ metadata:
 spec:
   selector:
     matchLabels:
-      run: usher
-  replicas: 1
+      app: usher
+      tier: frontend
+  replicas: 3
   template:
     metadata:
       labels:
-        run: usher
+        app: usher
+        tier: frontend
     spec:
       containers:
       - name: usher
