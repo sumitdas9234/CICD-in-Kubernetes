@@ -3,13 +3,13 @@ kind: Service
 metadata:
   name: usher-lb-svc
   labels:
-    run: usher
+    app: usher
 spec:
   selector:
-    name: nginx-ingress
+    app: usher
+    tier: frontend
   type: LoadBalancer
   ports:
-    -   
-      protocol: TCP
+    - protocol: TCP
       port: 80
       targetPort: 8000
