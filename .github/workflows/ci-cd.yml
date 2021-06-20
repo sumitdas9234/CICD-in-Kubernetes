@@ -22,7 +22,7 @@ jobs:
         run: |
           npm install
           npm run build --if-present
-        working-directory: ./google/app    
+        working-directory: ./app    
       
       - uses: google-github-actions/setup-gcloud@master
         with:
@@ -39,13 +39,13 @@ jobs:
         shell: bash
         run: |
           docker build . -t gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ env.TAG}}
-        working-directory: ./google/app/
+        working-directory: ./app
 
       - name: Push Container Image to Google Cloud Registry
         shell: bash
         run: |
           docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ env.TAG}}
-        working-directory: ./google/app/
+        working-directory: ./app
       
         # Set up kustomize
       - name: Set up Kustomize
